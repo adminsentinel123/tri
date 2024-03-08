@@ -3,155 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Registration & Admin Panel</title>
+  <title>Dashboard</title>
   <style>
     body {
-      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 50px auto;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    input[type="text"],
-    input[type="password"],
-    input[type="file"],
-    button {
-      display: block;
-      margin-bottom: 10px;
-      width: 100%;
-      padding: 10px;
-      box-sizing: border-box;
-    }
-
-    button {
+    header {
       background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .admin-panel {
-      max-width: 800px;
-      margin: 20px auto;
+      color: #fff;
       padding: 20px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
 
-    #user-list {
+    .user-info {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-info img {
+      margin-left: 10px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    nav {
+      background-color: #f8f9fa;
+      padding: 10px;
+    }
+
+    nav ul {
       list-style-type: none;
+      margin: 0;
       padding: 0;
     }
 
-    .user-item {
-      margin-bottom: 10px;
+    nav ul li {
+      display: inline;
+    }
+
+    nav ul li a {
       padding: 10px;
-      background-color: #f9f9f9;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+      text-decoration: none;
+      color: #000;
+    }
+
+    nav ul li a.active {
+      font-weight: bold;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    .content {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="register-container">
-    <div id="register-form">
-      <h2>Register</h2>
-      <form id="user-form">
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <input type="password" id="confirm-password" placeholder="Confirm Password" required>
-        <button type="submit" id="register-btn">Register</button>
-      </form>
+  <header>
+    <h1>Welcome to the Dashboard</h1>
+    <div class="user-info">
+      <p>Hello, <span id="username">Guest</span></p>
+      <img id="profile-picture" src="default_profile_picture.jpg" alt="Profile Picture">
     </div>
-    <div id="profile-form" style="display: none;">
-      <h2>Complete Profile</h2>
-      <form id="profile-details">
-        <input type="text" id="name" placeholder="Name" required>
-        <input type="file" id="profile-picture" required accept="image/*">
-        <button type="submit" id="complete-profile-btn">Complete Registration</button>
-      </form>
+  </header>
+  
+  <nav>
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="skin.html">Skin</a></li>
+      <li><a href="chat.html">Chat</a></li>
+      <li><a href="settings.html">Settings</a></li>
+    </ul>
+  </nav>
+  
+  <section>
+    <div class="content">
+      <h2>Welcome to Your Dashboard!</h2>
+      <p>Enjoy exploring the features of our platform.</p>
     </div>
-    <div id="success" style="display: none;">
-      <h2>Registration Successful</h2>
-      <p>Your ID: <span id="user-id"></span></p>
-    </div>
-  </div>
-
-  <div class="admin-panel" id="admin-panel" style="display: none;">
-    <h2>Admin Panel</h2>
-    <ul id="user-list"></ul>
-  </div>
-
-  <script>
-    var users = [];
-
-    document.getElementById('user-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var username = document.getElementById('username').value;
-      var password = document.getElementById('password').value;
-      var confirmPassword = document.getElementById('confirm-password').value;
-      
-      if (password !== confirmPassword) {
-        alert("Passwords don't match");
-        return;
-      }
-
-      document.getElementById('register-form').style.display = 'none';
-      document.getElementById('profile-form').style.display = 'block';
-    });
-
-    document.getElementById('profile-details').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var name = document.getElementById('name').value;
-      var profilePicture = document.getElementById('profile-picture').value;
-      
-      // Check if name is taken
-      if (users.find(user => user.name === name)) {
-        alert("Name already taken");
-        return;
-      }
-
-      var userId = generateUserId();
-      var newUser = { id: userId, name: name };
-      users.push(newUser);
-
-      document.getElementById('profile-form').style.display = 'none';
-      document.getElementById('success').style.display = 'block';
-      document.getElementById('user-id').textContent = userId;
-
-      // Update admin panel
-      updateAdminPanel();
-    });
-
-    function generateUserId() {
-      return Math.floor(Math.random() * (9999999999 - 1000 + 1)) + 1000;
-    }
-
-    function updateAdminPanel() {
-      var userList = document.getElementById('user-list');
-      userList.innerHTML = '';
-
-      users.forEach(function(user) {
-        var li = document.createElement('li');
-        li.classList.add('user-item');
-        li.textContent = 'ID: ' + user.id + ' | Name: ' + user.name;
-        userList.appendChild(li);
-      });
-
-      document.getElementById('admin-panel').style.display = 'block';
-    }
-  </script>
+  </section>
 </body>
 </html>
